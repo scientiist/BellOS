@@ -56,7 +56,19 @@ unsigned char keyset[128] = {
     0,  /* F11 Key */
     0,  /* F12 Key */
     0,  /* All other keys are undefined */
-}; 
+};
+
+bool isEqual(char string1[], char string2[]) {
+
+    for(int i = 0; i < 64; i++) {
+        if(string1[i] != string2[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
 
 
 #if defined(__cplusplus)
@@ -75,8 +87,20 @@ static inline uint8_t inb(uint16_t port) {
     return ret;
 }
 
+
+
 // initialize the terminal
 Terminal term;
+
+int counter = 0;
+char command[64];
+
+void clearCommandBuffer() {
+    for (int i = 0; i < 64; i++) {
+        command[i] = 0;
+    }
+}
+
 
 char last = 0;
 
@@ -92,7 +116,8 @@ char getScancode() {
                     //term.WriteString("(Enter Pressed)");
                 } else {
                     term.PutChar(keyset[c]);
-
+                    command[counter] = keyset[c];
+                    counter++;
                 }
                 return keyset[c];
             }
@@ -100,30 +125,17 @@ char getScancode() {
 	}
 }
 
-char command[64] = "";
-
-void prompt() {
-
-
+char *prompt() {
+    clearCommandBuffer();
 	term.PutChar('>');
 	
-	char input = 0;
-    int counter = 0;
-
-
+	char input=0;
+    counter = 0;
 	while (input != '\n'){
-        
         input = getScancode();
-
-        command[counter] = input;
-        counter++;
-
-
-		//if (getScancode()) {
-            
-		//}
-	}
+    }
     term.PutChar('\n');
+
 }
 
 void kernel_main(void) {
@@ -141,10 +153,17 @@ void kernel_main(void) {
 
     while(true) {
         prompt();
-        term.WriteString(command);
 
+        char ass[64] = "faggot";
+        if (isEqual(command, ass) == true) {
+            term.WriteString("I got broads in atlanta.\n");
+        } else if (command[0] == 0) {
+            continue;
+        } else {
+            term.WriteString("error: command \"");
+            term.WriteString(command);
+            term.WriteString("\" not found...\n");
+        }
     }
 
-}
-
-}
+}}
