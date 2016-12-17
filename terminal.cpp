@@ -52,6 +52,26 @@ void Terminal::Scroll(void){
     }
 }
 
+void Terminal::Clear(void) {
+	terminal_row = 0;
+	terminal_column = 0;
+	terminal_ypos = 0;
+
+	for (int i = 0; i<VGA_HEIGHT; i++) {
+		for (int x = 0; x < VGA_HEIGHT; x++) {
+			this->WriteString(" ");
+		}
+	}
+	for (int i = 0; i<VGA_HEIGHT; i++) {
+		terminal_buffer[i] = 0;
+	}
+
+	terminal_row = 0;
+	terminal_column = 0;
+	terminal_ypos = 0;
+
+}
+
  
 void Terminal::SetColor(uint8_t color) {
 	terminal_color = color;

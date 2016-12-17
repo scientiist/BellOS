@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "terminal.h"
+#include "string.h"
 #include "keyboard.h"
 
 
@@ -27,13 +28,13 @@ unsigned char keyset[128] = {
   't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', /* Enter key */
     0,          /* 29   - Control */
   'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', /* 39 */
- '\'', '`',   0,        /* Left shift */
+ '\'', '`',   '\s',        /* Left shift */
  '\\', 'z', 'x', 'c', 'v', 'b', 'n',            /* 49 */
   'm', ',', '.', '/',   0,              /* Right shift */
   '*',
     0,  /* Alt */
   ' ',  /* Space bar */
-    0,  /* Caps lock */
+    '\c',  /* Caps lock */
     0,  /* 59 - F1 key ... > */
     0,   0,   0,   0,   0,   0,   0,   0,
     0,  /* < ... F10 */
@@ -58,15 +59,6 @@ unsigned char keyset[128] = {
     0,  /* All other keys are undefined */
 };
 
-bool isEqual(char string1[], char string2[]) {
-
-    for(int i = 0; i < 64; i++) {
-        if(string1[i] != string2[i]) {
-            return false;
-        }
-    }
-    return true;
-}
 
 
 
@@ -87,10 +79,22 @@ static inline uint8_t inb(uint16_t port) {
     return ret;
 }
 
+void update_cursor(int row, int col)
+{
+    unsigned short position=(row*80) + col;
+ 
+    // cursor LOW port to vga INDEX register
+    outb(0x3D4, 0x0F);
+    outb(0x3D5, (unsigned char)(position&0xFF));
+    // cursor HIGH port to vga INDEX register
+    outb(0x3D4, 0x0E);
+    outb(0x3D5, (unsigned char )((position>>8)&0xFF));
+}
 
 
 // initialize the terminal
 Terminal term;
+String strLib;
 
 int counter = 0;
 char command[64];
@@ -101,8 +105,8 @@ void clearCommandBuffer() {
     }
 }
 
-
 char last = 0;
+bool upperCase = false;
 
 char getScancode() {
 	
@@ -114,10 +118,26 @@ char getScancode() {
             if (c>0) {
                 if (keyset[c] == '\n') {
                     //term.WriteString("(Enter Pressed)");
+                } else if (keyset[c] == '\b') {
+                    if (counter > 0) {
+                        counter--;
+                        command[counter] = 0;
+                        term.terminal_column--;
+                        term.PutChar(0);
+                        term.terminal_column--;
+                        update_cursor(term.terminal_row, term.terminal_column);
+                    }
+                } else if (keyset[c] == '\c') {
+                    upperCase = !upperCase;
                 } else {
-                    term.PutChar(keyset[c]);
+                    if (upperCase == true) {
+                        term.PutChar(strLib.Upper(keyset[c]));
+                    } else {
+                        term.PutChar(keyset[c]);
+                    }
                     command[counter] = keyset[c];
                     counter++;
+                    update_cursor(term.terminal_row, term.terminal_column);
                 }
                 return keyset[c];
             }
@@ -125,9 +145,10 @@ char getScancode() {
 	}
 }
 
-char *prompt() {
+void prompt() {
     clearCommandBuffer();
 	term.PutChar('>');
+    update_cursor(term.terminal_row, term.terminal_column);
 	
 	char input=0;
     counter = 0;
@@ -135,35 +156,41 @@ char *prompt() {
         input = getScancode();
     }
     term.PutChar('\n');
-
 }
 
 void kernel_main(void) {
+
 	/* Initialize terminal interface */
 	
 
 	term.Initialize();
  
 	/* Newline support is left as an exercise. */
-	term.WriteString("|Starting BellOS (0.12)...\n");
+	term.WriteString("|Starting BellOS (0.13)...\n");
 	term.WriteString("|Initializing keyboard...\n");
 	term.WriteString("|Ready!\n");
+
+    char imgay[] = "faggots";
+    char *p = strLib.Upper(imgay);
+    term.WriteString(p);
 
     
 
     while(true) {
         prompt();
 
-        char ass[64] = "faggot";
-        if (isEqual(command, ass) == true) {
-            term.WriteString("I got broads in atlanta.\n");
+
+        /*char clear[64] = "clear";
+        
+        if (isEqual(command, clear) == true) {
+            term.Clear();
         } else if (command[0] == 0) {
             continue;
         } else {
             term.WriteString("error: command \"");
             term.WriteString(command);
             term.WriteString("\" not found...\n");
-        }
+        }*/
     }
 
 }}
