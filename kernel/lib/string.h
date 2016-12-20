@@ -7,51 +7,14 @@
 
 	API Functions:
 
-		+ size_t GetLength(const char* string)
-			- summary
-				+ Returns the length (in characters) of the provided string.
-			- arguments
-				+ const char* string: 
-			- returns:
-				+ size_t: represent number of characters in the given string
-		______________________________________________________________________
-
+		+ size_t GetLength(const char* string) 
 		+ int GetChar(const char* string, char findme)
-			- summary
-				+ Returns the length (in characters) of the provided string.
-			- arguments
-				+ const char* string: 
-			- returns:
-				+ size_t: represent number of characters in the given string
-		______________________________________________________________________
-
 		+ bool GetEquals(const char* string)
-			- summary
-				+ Returns the length (in characters) of the provided string.
-			- arguments
-				+ const char* string: 
-			- returns:
-				+ size_t: represent number of characters in the given string
-		______________________________________________________________________
-
 		+ char* Append(const char* string)
-			- summary
-				+ Returns the length (in characters) of the provided string.
-			- arguments
-				+ const char* string: 
-			- returns:
-				+ size_t: represent number of characters in the given string
-		______________________________________________________________________
-
+		+ char Upper(char c)
+		+ char Lower(char c)
 		+ char* Upper(const char* string)
-			-summary
-				+ Returns the length (in characters) of the provided string.
-			-arguments
-				+ const char* string: 
-			-returns:
-				+ size_t: represent number of characters in the given string
-
-
+		+ char * Lower(const char* string)
 */
 
 #ifndef __STRINGLIB_INCLUDED__
@@ -73,6 +36,7 @@ class String {
 		char Lower(char c);
 		char* Upper(const char* string);
 		char* Lower(const char* string);
+		int ToInt(const char* string);
 };
 
 #endif

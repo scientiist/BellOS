@@ -5,9 +5,7 @@
 #include <stdint.h>
 #include "terminal.h"
 #include "../lib/string.h"
-
-
-
+#include "../lib/maths.h"
 
 /* Check if the compiler thinks we are targeting the wrong operating system. */
 #if defined(__linux__)
@@ -75,8 +73,7 @@ static inline uint8_t inb(uint16_t port) {
     return ret;
 }
 
-void update_cursor(int row, int col)
-{
+void update_cursor(int row, int col) {
     unsigned short position=(row*80) + col;
  
     // cursor LOW port to vga INDEX register
@@ -166,27 +163,9 @@ void kernel_main(void) {
 	term.WriteString("|Initializing keyboard...\n");
 	term.WriteString("|Ready!\n");
 
-    char imgay[] = "faggots";
-    char *p = strLib.Upper(imgay);
-    term.WriteString(p);
-
-    
-
     while(true) {
         prompt();
 
-
-        /*char clear[64] = "clear";
-        
-        if (isEqual(command, clear) == true) {
-            term.Clear();
-        } else if (command[0] == 0) {
-            continue;
-        } else {
-            term.WriteString("error: command \"");
-            term.WriteString(command);
-            term.WriteString("\" not found...\n");
-        }*/
     }
 
 }}

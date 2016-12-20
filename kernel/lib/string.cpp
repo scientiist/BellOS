@@ -1,5 +1,6 @@
 #include "string.h"
 // API specifications in "string.h"
+
 size_t String::GetLength(const char* string) {
 	size_t len = 0;
 	while (string[len])
@@ -77,5 +78,27 @@ char* String::Lower(const char* string) {
 
 
 	return retString;
+
+}
+
+int String::ToInt(const char* string) {
+	int result = 0;
+	int puiss = 1;
+
+	while(('-' == (*string)) || ((*str) == '+')) {
+		if (*str == '-') {
+			puiss = puiss * -1;
+		}
+		str++;
+	}
+
+	while ((*str >= '0') && (*str <= '9')) {
+		result = (result * 10) + ((*str) - '0');
+		str++;
+	}
+	return (result * puiss);
+}
+
+char* String::Reverse(const char* string2) {
 
 }
