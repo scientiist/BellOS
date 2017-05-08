@@ -1,7 +1,7 @@
 /*
 	The BellOS Timing Class. Clocks, halting, etc.
 
-	Written by J. O'Leary, last modified 17 December, 2016.
+	Written by J. O'Leary, last modified 7 May, 2017.
 	MIT license, refer to <LICENSE.txt> for full info.
 
 */
@@ -17,7 +17,8 @@
 
 class Time {
 	public:
-
+		void GetUnixTime();
+		void Sleep(unsigned int milliseconds);
 };
 
 #endif
