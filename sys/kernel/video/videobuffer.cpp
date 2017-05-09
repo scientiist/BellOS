@@ -21,24 +21,20 @@ size_t strlen(const char* str) {
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
 
-size_t VideoBuffer_row;
-size_t VideoBuffer_ypos;
-size_t VideoBuffer_column;
-uint8_t VideoBuffer_color;
-uint16_t* VideoBuffer_buffer;
+
 
 
 
 void VideoBuffer::Initialize(void) {
-	VideoBuffer_row = 0;
-	VideoBuffer_ypos = 0;
-	VideoBuffer_column = 0;
-	VideoBuffer_color = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
-	VideoBuffer_buffer = (uint16_t*) 0xB8000;
+	this->row = 0;
+	this->ypos = 0;
+	this->column = 0;
+	this->textColor = vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+	this->buffer = (uint16_t*) 0xB8000;
 	for (size_t y = 0; y < VGA_HEIGHT; y++) {
 		for (size_t x = 0; x < VGA_WIDTH; x++) {
 			const size_t index = y * VGA_WIDTH + x;
-			VideoBuffer_buffer[index] = vga_entry(' ', VideoBuffer_color);
+			this->buffer[index] = vga_entry(' ', this->textColor);
 		}
 	}
 }
@@ -57,15 +53,20 @@ void VideoBuffer::SetCursor(int row, int col) {
 void VideoBuffer::Scroll(void){
     for(int i = 0; i < VGA_HEIGHT; i++){
         for (int m = 0; m < VGA_WIDTH; m++){
-            VideoBuffer_buffer[i * VGA_WIDTH + m] = VideoBuffer_buffer[(i + 1) * VGA_WIDTH + m];
+            this->buffer[i * VGA_WIDTH + m] = this->buffer[(i + 1) * VGA_WIDTH + m];
         }
     }
 }
 
+void VideoBuffer::MoveTo(size_t x, size_t y) {
+	this->row = x;
+	this->column = y;
+}
+
 void VideoBuffer::Clear(void) {
-	VideoBuffer_row = 0;
-	VideoBuffer_column = 0;
-	VideoBuffer_ypos = 0;
+	this->row = 0;
+	this->column = 0;
+	this->ypos = 0;
 
 	for (int i = 0; i<VGA_HEIGHT; i++) {
 		for (int x = 0; x < VGA_HEIGHT; x++) {
@@ -73,46 +74,50 @@ void VideoBuffer::Clear(void) {
 		}
 	}
 	for (int i = 0; i<VGA_HEIGHT; i++) {
-		VideoBuffer_buffer[i] = 0;
+		this->buffer[i] = 0;
 	}
 
-	VideoBuffer_row = 0;
-	VideoBuffer_column = 0;
-	VideoBuffer_ypos = 0;
+	this->row = 0;
+	this->column = 0;
+	this->ypos = 0;
 	this->SetCursor(0, 0);
 
 }
 
  
-void VideoBuffer::SetColor(uint8_t color) {
-	VideoBuffer_color = color;
+void VideoBuffer::SetColor(enum vga_color color) {
+	this->fgColor = color;
+}
+
+void VideoBuffer::SetBackgroundColor(enum vga_color bgcolor) {
+	this->bgColor = bgcolor;
 }
  
 void VideoBuffer::PutEntryAt(char c, uint8_t color, size_t x, size_t y) {
 	const size_t index = y * VGA_WIDTH + x;
-	VideoBuffer_buffer[index] = vga_entry(c, color);
+	this->buffer[index] = vga_entry(c, color);
 }
  
 void VideoBuffer::PutChar(char c) {
 	if (c == '\n') {
-		VideoBuffer_row++;
-		VideoBuffer_column = 0;
-		if (VideoBuffer_row >= VGA_HEIGHT) {
+		this->row++;
+		this->column = 0;
+		if (this->row >= VGA_HEIGHT) {
 			this->Scroll();
-			VideoBuffer_row--;
+			this->row--;
 		}
 	} else {
 
-		this->PutEntryAt(c, VideoBuffer_color, VideoBuffer_column, VideoBuffer_row);
-		if (++VideoBuffer_column == VGA_WIDTH) {
-			VideoBuffer_column = 0;
-			if (++VideoBuffer_row == VGA_HEIGHT)
-				VideoBuffer_row = 0;
+		this->PutEntryAt(c, vga_entry_color(this->fgColor, this->bgColor), this->column, this->row);
+		if (++this->column == VGA_WIDTH) {
+			this->column = 0;
+			if (++this->row == VGA_HEIGHT)
+				this->row = 0;
 		}
 
 
 	}
-	this->SetCursor(VideoBuffer_row, VideoBuffer_column);
+	this->SetCursor(this->row, this->column);
 }
  
 void VideoBuffer::Write(const char* data, size_t size) {

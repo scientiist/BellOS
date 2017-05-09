@@ -21,6 +21,7 @@ class String {
 		String(char c);
 		String(const char* str);
 		String(String& s);
+		String(int s);
 		int length();
 		bool equals(String compare);
 		bool equals(const char* str);
