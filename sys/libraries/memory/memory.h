@@ -9,7 +9,7 @@
 
 #ifndef _HAVE_SIZE_T
 #define _HAVE_SIZE_T
-typedef	unsigned int	size_t;
+typedef	size_t unsigned int;
 #endif
 
 

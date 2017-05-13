@@ -11,14 +11,14 @@
 #include "../../libraries/string/string.h"
 
 class VideoBuffer {
-		size_t row;
-		size_t ypos;
-		size_t column;
 		enum vga_color fgColor = VGA_COLOR_LIGHT_GREY;
 		enum vga_color bgColor = VGA_COLOR_BLACK;
 		uint8_t textColor;
 		uint16_t* buffer;
 	public:
+		size_t row;
+		size_t ypos;
+		size_t column;
 		void Initialize(void);
 		void Scroll(void);
 		void SetCursor(int row, int col);

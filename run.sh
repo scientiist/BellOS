@@ -15,6 +15,7 @@ i686-elf-gcc -c sys/kernel/video/videobuffer.cpp -o build/videobuffer.o -ffreest
 
 i686-elf-gcc -c sys/libraries/string/string.cpp  -o build/string.o -ffreestanding -O2 -Wall -Wextra
 i686-elf-gcc -c sys/libraries/time/time.cpp  -o build/time.o -ffreestanding -O2 -Wall -Wextra
+# i686-elf-gcc -c sys/libraries/memory/memory.cpp  -o build/memory.o -ffreestanding -O2 -Wall -Wextra
 
 i686-elf-gcc -c sys/opt/terminal/terminal.cpp -o build/terminal.o -ffreestanding -O2 -Wall -Wextra
 

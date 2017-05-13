@@ -1,5 +1,5 @@
-#ifndef __VGA_ENUMS__
-#define __VGA__ENUMS__
+#ifndef __KEYSET_ENUMS__
+#define __KEYSET__ENUMS__
 
 // ASCII Querty-US keyboard set
 unsigned char keyset[128] = {
@@ -23,15 +23,15 @@ unsigned char keyset[128] = {
     0,  /* 69 - Num lock*/
     0,  /* Scroll Lock */
     0,  /* Home key */
-    0,  /* Up Arrow */
+    '\A',  /* Up Arrow */
     0,  /* Page Up */
   '-',
-    0,  /* Left Arrow */
+    '\L',  /* Left Arrow */
     0,
-    0,  /* Right Arrow */
+    '\R',  /* Right Arrow */
   '+',
     0,  /* 79 - End key*/
-    0,  /* Down Arrow */
+    '\D',  /* Down Arrow */
     0,  /* Page Down */
     0,  /* Insert Key */
     0,  /* Delete Key */

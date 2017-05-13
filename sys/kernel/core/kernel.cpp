@@ -6,6 +6,7 @@
 #include "../video/videobuffer.h"
 #include "asm/asm.h"
 #include "../../opt/terminal/terminal.h"
+#include "../../libraries/time/time.h"
 
 
 extern "C" {
@@ -16,22 +17,28 @@ extern "C" {
         kernelVB.Initialize();
     
         /* Newline support is left as an exercise. */
-        kernelVB.SetColor(VGA_COLOR_LIGHT_GREY);
+        kernelVB.SetBackgroundColor(VGA_COLOR_WHITE);
+
+        kernelVB.SetColor(VGA_COLOR_BLACK);
         kernelVB.WriteString("> BellOS educational operating system.\n");
         kernelVB.WriteString("> Revision 15 (May 7 2017)\n");
         kernelVB.WriteString("> Starting kernel...\n\n");
 
-        kernelVB.SetColor(VGA_COLOR_GREEN);
         for (int i = 0; i < 256; i++) {
+
             kernelVB.PutChar(i);
             kernelVB.PutChar(' ');
         }
 
-        //Terminal t;
-        //t.Initialize();
-        //t.Run();
+        kernelVB.WriteString("\nHello, trent!");
 
+        Terminal t;
+        t.Initialize();
+        
 
+       while(true) {
+      t.Run();
+      }
         
     }
 }

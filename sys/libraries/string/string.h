@@ -15,21 +15,24 @@
 #include <stdint.h>
 
 class String {
-		const char* str = "";
+		const char* str = NULL;
 	public:
 		String();
 		String(char c);
 		String(const char* str);
 		String(String& s);
 		String(int s);
-		int length();
-		bool equals(String compare);
+		String(bool b);
+		int getLength();
 		bool equals(const char* str);
-		bool equalsIgnoreCase(String compare);
+		bool equals(String& compare);
 		const char* toCharArray();
 		String toLowerCase();
 		String toUpperCase();
-
+		char operator[] (int j);
+		bool operator== (const char* str);
+		bool operator== (String& lhs);
+		String& operator+= (String& s);
 };
 
 #endif

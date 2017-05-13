@@ -1,1 +1,1 @@
-unsigned clock_rtc_read();
+unsigned int getTime();

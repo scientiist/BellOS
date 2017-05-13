@@ -4,10 +4,12 @@
 
 class Terminal {
 		VideoBuffer termVB;
+		String lastInp;
 	public:
 		void Initialize();
-		void Run();
+		bool Run();
 		void Prompt();
+		String GetInput();
 };
 
 #endif
