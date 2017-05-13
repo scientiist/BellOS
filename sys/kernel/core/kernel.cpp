@@ -1,28 +1,23 @@
+// BellOS main - kernel startup thingy.
+
+// some junk
 #include <stddef.h>
 #include <stdint.h>
 
-
-// include kernel systems
-#include "../video/videobuffer.h"
-#include "asm/asm.h"
-#include "../../opt/terminal/terminal.h"
-#include "../../libraries/time/time.h"
-
+#include "../video/videobuffer.h" // videobuffer class
+#include "../../opt/terminal/terminal.h" // terminal program, run this after starting kernel stuff...
 
 extern "C" {
     
     void kernel_main(void) {
+
+        // build videobuffer
         VideoBuffer kernelVB;
-
         kernelVB.Initialize();
-    
-        /* Newline support is left as an exercise. */
-        kernelVB.SetBackgroundColor(VGA_COLOR_WHITE);
+        kernelVB.SetBackgroundColor(VGAColor::BLACK);
 
-        kernelVB.SetColor(VGA_COLOR_BLACK);
-        kernelVB.WriteString("> BellOS educational operating system.\n");
-        kernelVB.WriteString("> Revision 15 (May 7 2017)\n");
-        kernelVB.WriteString("> Starting kernel...\n\n");
+        kernelVB.SetColor(VGAColor::WHITE);
+        kernelVB.WriteString("> Started VideoBuffer");
 
         for (int i = 0; i < 256; i++) {
 
@@ -30,15 +25,11 @@ extern "C" {
             kernelVB.PutChar(' ');
         }
 
-        kernelVB.WriteString("\nHello, trent!");
-
+        // make terminal and run it
         Terminal t;
         t.Initialize();
-        
-
-       while(true) {
-      t.Run();
-      }
-        
+        while(true) {
+            t.Run();
+        } 
     }
 }
